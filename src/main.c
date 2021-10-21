@@ -1,29 +1,40 @@
-// 1000 이하의 소수를 구합니다(버전 3)
+// 한 해의 지난 날 수를 구합니다.
 #include <stdio.h>
+
+// 각 달의 날 수
+int mdays[][12] = {
+	{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+	{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+};
+
+// year년이 윤년인가?
+int isleap(int year){
+	return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+}
+
+// y년 m월 d일의 그 해 지난 날 수를 구합니다
+int dayOfYear(int y, int m, int d)
+{
+	int i;
+	int days = d;
+	for(i = 1; i < m; i++) {
+		days += mdays[isleap(y)][i-1];
+	}
+	return days;
+}
 
 int main(void)
 {
-	int i, n;
-	int prime[500]; //소수를 저장하는 배열
-	int ptr = 0; //이미 얻은 소수의 개수
-	unsigned long counter = 0; //곱셈과 나눗셈의 실행 횟수
-	prime[ptr++] = 2;
-	prime[ptr++] = 3;
-	for(n = 5; n <= 1000; n += 2) {
-		int flag = 0;
-		for(i = 1; counter++, prime[i] * prime[i] <= n; i++) {
-			counter++;
-			if(n % prime[i] == 0) {
-				flag = 1;
-				break;
-			}
-		}
-		if(!flag)
-			prime[ptr++] = n;
-	}
-	for(i = 0; i < ptr; i++)
-		printf("%d\n", prime[i]);
-	printf("곱셈과 나눗셈을 실행한 횟수 : %lu\n", counter);
+	int year, month, day; // 년, 월, 일
+	int retry;
+	do {
+		printf("년 : "); scanf("%d", &year);
+		printf("월 : "); scanf("%d", &month);
+		printf("일: "); scanf("%d", &day);
+		printf("%d년의 %d일째입니다.\n", year, dayOfYear(year, month, day));
+		printf("다시 할까요?(1 ... 예 / 0 ... 아니오) : ");
+		scanf("%d", &retry);
+	} while(retry == 1);
 	
 	return 0;
 }
